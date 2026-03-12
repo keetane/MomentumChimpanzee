@@ -1,0 +1,32 @@
+name: daily-grok-trader
+
+on:
+  schedule:
+    # 08:00 JST = 23:00 UTC (前日)
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        working-directory: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/apps/MomentumChimpanzee
+
+      - name: Run
+        env:
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          XAI_MODEL: ${{ secrets.XAI_MODEL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          MAX_PICKS: '10'
+        run: python main.py
+        working-directory: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/apps/MomentumChimpanzee
