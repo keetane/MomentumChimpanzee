@@ -1,3 +1,4 @@
 .env
 logs/
 data/last_report.txt
+!data/universe.csv
