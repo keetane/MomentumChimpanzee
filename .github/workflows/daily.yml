@@ -26,5 +26,5 @@ jobs:
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
           XAI_MODEL: ${{ secrets.XAI_MODEL }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          MAX_PICKS: '10'
+          MAX_PICKS: '5'
         run: python main.py
