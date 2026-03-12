@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-        working-directory: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/apps/MomentumChimpanzee
+        working-directory: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/MomentumChimpanzee
 
       - name: Run
         env:
@@ -29,4 +29,4 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           MAX_PICKS: '10'
         run: python main.py
-        working-directory: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/apps/MomentumChimpanzee
+        working-directory: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/MomentumChimpanzee
