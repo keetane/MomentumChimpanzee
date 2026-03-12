@@ -311,13 +311,33 @@ def build_tl_scan_prompt(max_count: int) -> tuple[str, str]:
     return system, json.dumps(user, ensure_ascii=False)
 
 
+def split_for_discord(message: str, max_len: int = 1900) -> list[str]:
+    # Discordの2000文字制限を超えないように分割
+    chunks: list[str] = []
+    buf: list[str] = []
+    current = 0
+    for line in message.splitlines():
+        line_len = len(line) + 1
+        if current + line_len > max_len and buf:
+            chunks.append("\n".join(buf))
+            buf = [line]
+            current = line_len
+        else:
+            buf.append(line)
+            current += line_len
+    if buf:
+        chunks.append("\n".join(buf))
+    return chunks
+
+
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=10))
 def send_discord(message: str) -> None:
     webhook = os.environ["DISCORD_WEBHOOK_URL"]
-    payload = {"content": message}
-    resp = requests.post(webhook, json=payload, timeout=30)
-    if resp.status_code >= 300:
-        raise RuntimeError(f"Discord送信失敗: {resp.status_code} {resp.text}")
+    for part in split_for_discord(message):
+        payload = {"content": part}
+        resp = requests.post(webhook, json=payload, timeout=30)
+        if resp.status_code >= 300:
+            raise RuntimeError(f"Discord送信失敗: {resp.status_code} {resp.text}")
 
 
 def build_prompt(jp_metrics: list[dict], us_summary: dict, max_picks: int) -> tuple[str, str]:
