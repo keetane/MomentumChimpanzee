@@ -1,9 +1,6 @@
 name: daily-grok-trader
 
 on:
-  schedule:
-    # 06:00 JST = 21:00 UTC (前日)
-    - cron: '0 21 * * *'
   workflow_dispatch:
 
 jobs:
